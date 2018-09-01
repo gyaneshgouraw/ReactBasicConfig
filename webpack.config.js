@@ -1,4 +1,5 @@
 const path = require('path');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -6,6 +7,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
   },
+  mode:'development',
   module: {
     rules: [
       {
@@ -17,7 +19,39 @@ module.exports = {
             presets: ['@babel/preset-react','@babel/preset-env']
           }
         }
+      },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract(
+          {
+            fallback: 'style-loader',
+            use: {
+              loader:'css-loader',
+              query:{
+                modules:true,
+                localIdentName:'[name]__[local]--[hash:base64:5]'
+              }
+             // 
+            }
+          })
       }
     ]
-  }
+  },
+  plugins: [ 
+    new ExtractTextPlugin({filename: 'style.css'})
+  ]
 };
+
+
+
+/** 
+ * Webpack-dev-server config
+ * https://medium.com/@rajaraodv/webpack-the-confusing-parts-58712f8fcad9
+ */
+
+
+ /**  
+  * React setup scratch
+  * https://hackernoon.com/a-tale-of-webpack-4-and-how-to-finally-configure-it-in-the-right-way-4e94c8e7e5c1
+  * 
+  */
